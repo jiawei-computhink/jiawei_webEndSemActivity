@@ -14,7 +14,7 @@ function setup() {
   player = new Sprite();
   player.diameter = 30;
   player.x = 80;
-  player.y = 430;
+  player.y = 440;
   player.color = '#f7d154';
   player.stroke = '#fff0a8';
   player.rotationLock = true;
@@ -225,7 +225,7 @@ function drawHUD() {
 
 function resetPlayer() {
   player.x = 80;
-  player.y = 430;
+  player.y = 440;
   player.vel.x = 0;
   player.vel.y = 0;
 }
