@@ -26,7 +26,7 @@ function setup() {
 
   playerOne = makePaddle(width * 0.25, '#ff4fd8', '#ffb1ed');
   playerTwo = makePaddle(width * 0.75, '#42eaff', '#b1faff');
-  puck = new Sprite(width / 2, height / 2, 26, 'dynamic');
+  puck = new Sprite(width / 2, height / 2, 26, 26, 'dynamic');
   puck.color = '#ffffff';
   puck.stroke = '#d6fcff';
   puck.bounciness = 1;
@@ -45,7 +45,7 @@ function addWall(x, y, w, h) {
 }
 
 function makePaddle(x, colorValue, strokeValue) {
-  const paddle = new Sprite(x, height / 2, 56, 'kinematic');
+  const paddle = new Sprite(x, height / 2, 56, 56, 'kinematic');
   paddle.color = colorValue;
   paddle.stroke = strokeValue;
   paddle.bounciness = 1;
@@ -191,6 +191,7 @@ function resetGame() {
 function keyPressed() {
   if (key === 'r' || key === 'R') {
     resetGame();
+    startRound();
     return;
   }
 
@@ -199,6 +200,7 @@ function keyPressed() {
       startRound();
     } else if (gameState === 'finished') {
       resetGame();
+      startRound();
     }
   }
 }
