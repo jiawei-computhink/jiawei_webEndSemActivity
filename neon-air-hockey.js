@@ -210,5 +210,6 @@ function mousePressed() {
     startRound();
   } else if (gameState === 'finished') {
     resetGame();
+    startRound();
   }
 }
