@@ -167,7 +167,7 @@ function checkRingOut() {
 
 function drawTopDetails(top, topColor, spinDirection) {
   const spin = frameCount * 0.22 * spinDirection;
-  const size = topBoostFlashFor(top);
+  const boosted = topBoostFlashFor(top);
 
   push();
   translate(top.x, top.y);
@@ -182,12 +182,12 @@ function drawTopDetails(top, topColor, spinDirection) {
     pop();
   }
   fill('#fff2bb');
-  circle(0, 0, size);
+  circle(0, 0, boosted ? 13 : 10);
   fill('#f6c85d');
-  circle(0, 0, size * 0.45);
+  circle(0, 0, boosted ? 6 : 4.5);
   pop();
 
-  if (topBoostFlashFor(top) > 0) {
+  if (boosted) {
     noFill();
     stroke(topColor);
     strokeWeight(3);
@@ -196,9 +196,7 @@ function drawTopDetails(top, topColor, spinDirection) {
 }
 
 function topBoostFlashFor(top) {
-  return top === playerTop
-    ? (playerBoostFlash > 0 ? 13 : 10)
-    : (rivalBoostFlash > 0 ? 13 : 10);
+  return top === playerTop ? playerBoostFlash > 0 : rivalBoostFlash > 0;
 }
 
 function drawHud() {
