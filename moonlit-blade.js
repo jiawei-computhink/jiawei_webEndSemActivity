@@ -1,6 +1,7 @@
 const arenaWidth = 900;
 const arenaHeight = 540;
 const enemiesToDefeat = 8;
+const enemyStartingHealth = 3;
 const playerStartingHealth = 5;
 
 let player;
@@ -147,6 +148,13 @@ function drawCharacterDetails() {
     fill('#e66e9f');
     triangle(enemy.x - 10, enemy.y - 11, enemy.x - 14, enemy.y - 20, enemy.x - 3, enemy.y - 13);
     triangle(enemy.x + 10, enemy.y - 11, enemy.x + 14, enemy.y - 20, enemy.x + 3, enemy.y - 13);
+
+    const healthBarWidth = 34;
+    const healthRatio = enemy.health / enemyStartingHealth;
+    fill('#24172d');
+    rect(enemy.x - healthBarWidth / 2, enemy.y - 28, healthBarWidth, 5, 2);
+    fill('#ff7da8');
+    rect(enemy.x - healthBarWidth / 2, enemy.y - 28, healthBarWidth * healthRatio, 5, 2);
   }
 
   pop();
@@ -262,6 +270,7 @@ function spawnEnemies() {
   enemy.friction = 0;
   enemy.drag = 0;
   enemy.rotationLock = true;
+  enemy.health = enemyStartingHealth;
   spawnedEnemies++;
   nextSpawnAt = millis() + 1250;
 }
@@ -278,9 +287,11 @@ function resolveSlash() {
     const verticalDistance = abs(enemy.y - player.y);
 
     if (horizontalDistance > 8 && horizontalDistance < slashReach && verticalDistance < verticalReach) {
-      enemy.remove();
-      defeatedEnemies++;
-      if (comboStep !== 3) return;
+      enemy.health--;
+      if (enemy.health <= 0) {
+        enemy.remove();
+        defeatedEnemies++;
+      }
     }
   }
 }
