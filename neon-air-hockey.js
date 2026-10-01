@@ -130,10 +130,10 @@ function showMessage(title, subtitle) {
 
 function movePaddles() {
   const speed = 5;
-  playerOne.vel.x = (keyIsDown(68) ? speed : 0) - (keyIsDown(65) ? speed : 0);
-  playerOne.vel.y = (keyIsDown(83) ? speed : 0) - (keyIsDown(87) ? speed : 0);
-  playerTwo.vel.x = (keyIsDown(RIGHT_ARROW) ? speed : 0) - (keyIsDown(LEFT_ARROW) ? speed : 0);
-  playerTwo.vel.y = (keyIsDown(DOWN_ARROW) ? speed : 0) - (keyIsDown(UP_ARROW) ? speed : 0);
+  playerOne.vel.x = (kb.pressing('d') ? speed : 0) - (kb.pressing('a') ? speed : 0);
+  playerOne.vel.y = (kb.pressing('s') ? speed : 0) - (kb.pressing('w') ? speed : 0);
+  playerTwo.vel.x = (kb.pressing('right') ? speed : 0) - (kb.pressing('left') ? speed : 0);
+  playerTwo.vel.y = (kb.pressing('down') ? speed : 0) - (kb.pressing('up') ? speed : 0);
 
   keepPaddleInBounds(playerOne, 52, width / 2 - 32);
   keepPaddleInBounds(playerTwo, width / 2 + 32, width - 52);
