@@ -152,9 +152,15 @@ function drawCharacterDetails() {
     const healthBarWidth = 34;
     const healthRatio = enemy.health / enemyStartingHealth;
     fill('#24172d');
-    rect(enemy.x - healthBarWidth / 2, enemy.y - 28, healthBarWidth, 5, 2);
+    rect(enemy.x, enemy.y - 28, healthBarWidth, 5, 2);
     fill('#ff7da8');
-    rect(enemy.x - healthBarWidth / 2, enemy.y - 28, healthBarWidth * healthRatio, 5, 2);
+    rect(
+      enemy.x - healthBarWidth * (1 - healthRatio) / 2,
+      enemy.y - 28,
+      healthBarWidth * healthRatio,
+      5,
+      2
+    );
   }
 
   pop();
