@@ -135,10 +135,11 @@ function checkAsteroidHits() {
 }
 
 function checkRoundEnd() {
-  if (collectedStars >= starsToCollect) {
-    gameState = 'won';
-  } else if (millis() - roundStartedAt >= roundLengthSeconds * 1000) {
+  const timeIsUp = millis() - roundStartedAt >= roundLengthSeconds * 1000;
+  if (remainingLives <= 0 || timeIsUp) {
     gameState = 'lost';
+  } else if (collectedStars >= starsToCollect) {
+    gameState = 'won';
   }
 }
 
