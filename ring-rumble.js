@@ -19,6 +19,7 @@ let opponentStun = 0;
 let playerAttackFlash = 0;
 let opponentAttackFlash = 0;
 let roundTime = 0;
+let playerJumpRequested = false;
 
 function setup() {
   createCanvas(arenaWidth, arenaHeight);
@@ -172,9 +173,10 @@ function updatePlayer() {
   }
   player.x += player.vel.x;
 
-  if (keyIsDown(87) && player.y >= ringFloor - 49) {
+  if (playerJumpRequested && player.y >= ringFloor - 49) {
     player.vel.y = -11;
   }
+  playerJumpRequested = false;
 
   player.vel.y = min(8, player.vel.y + 0.55);
   player.y += player.vel.y;
@@ -397,6 +399,7 @@ function resetGame() {
   playerAttackFlash = 0;
   opponentAttackFlash = 0;
   roundTime = 0;
+  playerJumpRequested = false;
 
   player.x = 330;
   player.y = ringFloor - 48;
@@ -425,6 +428,9 @@ function keyPressed() {
   if (key === 'j' || key === 'J') attack('punch');
   if (key === 'k' || key === 'K') attack('kick');
   if (key === 'l' || key === 'L') attack('grapple');
+  if ((key === 'w' || key === 'W') && gameState === 'playing') {
+    playerJumpRequested = true;
+  }
   return false;
 }
 
