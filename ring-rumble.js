@@ -19,7 +19,6 @@ let opponentStun = 0;
 let playerAttackFlash = 0;
 let opponentAttackFlash = 0;
 let roundTime = 0;
-let playerJumpRequested = false;
 
 function setup() {
   createCanvas(arenaWidth, arenaHeight);
@@ -46,6 +45,12 @@ function makeFighter(x, costumeColor, skinColor) {
 
 function draw() {
   drawArena();
+
+  if (gameState === 'title' && kb.presses('enter')) {
+    startGame();
+  } else if ((gameState === 'won' || gameState === 'lost') && kb.presses('r')) {
+    startGame();
+  }
 
   if (gameState === 'playing') {
     updateBout();
@@ -144,6 +149,7 @@ function updateBout() {
   updatePlayer();
   updateOpponent();
   updateFacing();
+  handlePlayerAttacks();
   keepInRing(player);
   keepInRing(opponent);
 
@@ -155,7 +161,7 @@ function updateBout() {
 }
 
 function updatePlayer() {
-  player.blocking = keyIsDown(83) && playerStun === 0;
+  player.blocking = kb.pressing('s') && playerStun === 0;
   player.attackPose = playerAttackFlash > 0 ? player.attackPose : 0;
 
   if (playerStun > 0) {
@@ -166,16 +172,15 @@ function updatePlayer() {
   if (player.blocking) {
     player.vel.x = 0;
   } else {
-    const movingLeft = keyIsDown(65);
-    const movingRight = keyIsDown(68);
+    const movingLeft = kb.pressing('a');
+    const movingRight = kb.pressing('d');
     player.vel.x = (movingRight ? fighterSpeed : 0) - (movingLeft ? fighterSpeed : 0);
   }
   player.x += player.vel.x;
 
-  if (playerJumpRequested && player.y >= ringFloor - 49) {
+  if (kb.presses('w') && player.y >= ringFloor - 49) {
     player.vel.y = -11;
   }
-  playerJumpRequested = false;
 
   player.vel.y = min(8, player.vel.y + 0.55);
   player.y += player.vel.y;
@@ -183,6 +188,12 @@ function updatePlayer() {
     player.y = ringFloor - 48;
     player.vel.y = 0;
   }
+}
+
+function handlePlayerAttacks() {
+  if (kb.presses('j')) attack('punch');
+  if (kb.presses('k')) attack('kick');
+  if (kb.presses('l')) attack('grapple');
 }
 
 function updateOpponent() {
@@ -398,7 +409,6 @@ function resetGame() {
   playerAttackFlash = 0;
   opponentAttackFlash = 0;
   roundTime = 0;
-  playerJumpRequested = false;
 
   player.x = 330;
   player.y = ringFloor - 48;
@@ -412,25 +422,6 @@ function resetGame() {
   opponent.vel.y = 0;
   opponent.attackPose = 0;
   opponent.blocking = false;
-}
-
-function keyPressed() {
-  if (gameState === 'title' && keyCode === ENTER) {
-    startGame();
-    return false;
-  }
-  if ((gameState === 'won' || gameState === 'lost') && (key === 'r' || key === 'R')) {
-    startGame();
-    return false;
-  }
-
-  if (key === 'j' || key === 'J') attack('punch');
-  if (key === 'k' || key === 'K') attack('kick');
-  if (key === 'l' || key === 'L') attack('grapple');
-  if ((key === 'w' || key === 'W') && gameState === 'playing') {
-    playerJumpRequested = true;
-  }
-  return false;
 }
 
 function mousePressed() {
