@@ -132,10 +132,10 @@ function updatePlayer() {
   let moveX = 0;
   let moveY = 0;
 
-  if (kb.pressing('a') || kb.pressing('left')) moveX--;
-  if (kb.pressing('d') || kb.pressing('right')) moveX++;
-  if (kb.pressing('w') || kb.pressing('up')) moveY--;
-  if (kb.pressing('s') || kb.pressing('down')) moveY++;
+  if (kb.pressing('a')) moveX--;
+  if (kb.pressing('d')) moveX++;
+  if (kb.pressing('w')) moveY--;
+  if (kb.pressing('s')) moveY++;
 
   const length = Math.hypot(moveX, moveY) || 1;
   player.x = constrain(player.x + moveX / length * playerSpeed, 52, width - 52);
@@ -180,8 +180,8 @@ function shoot() {
   bullet.shape = 'circle';
   bullet.color = '#ffe19a';
   bullet.stroke = '#fff8dd';
-  bullet.velocityX = aimX * 8;
-  bullet.velocityY = aimY * 8;
+  bullet.speedX = aimX * 8;
+  bullet.speedY = aimY * 8;
   bullet.createdAt = millis();
   lastShotAt = millis();
 }
@@ -222,6 +222,9 @@ function spawnEnemy() {
 
 function updateBullets() {
   for (const bullet of bullets) {
+    bullet.x += bullet.speedX;
+    bullet.y += bullet.speedY;
+
     if (
       millis() - bullet.createdAt > 1100 ||
       bullet.x < 30 || bullet.x > width - 30 ||
@@ -231,16 +234,18 @@ function updateBullets() {
       continue;
     }
 
+    let hitEnemy = false;
     for (const enemy of enemies) {
       if (dist(bullet.x, bullet.y, enemy.x, enemy.y) < 23) {
         enemy.remove();
         bullet.remove();
         defeatedEnemies++;
+        hitEnemy = true;
         break;
       }
     }
 
-    if (bullet.removed) continue;
+    if (hitEnemy) continue;
     for (const valve of valves) {
       if (!valve.activated && dist(bullet.x, bullet.y, valve.x, valve.y) < 25) {
         hitValve(valve);
