@@ -29,7 +29,8 @@ function setup() {
 }
 
 function makeFighter(x, costumeColor, skinColor) {
-  const fighter = new Sprite(x, ringFloor - 48, 42, 78, 'kinematic');
+  const fighter = new Sprite(x, ringFloor - 48, 42, 78, 'none');
+  fighter.visible = false;
   fighter.color = costumeColor;
   fighter.stroke = '#ffffff';
   fighter.friction = 0;
@@ -169,6 +170,7 @@ function updatePlayer() {
     const movingRight = keyIsDown(68);
     player.vel.x = (movingRight ? fighterSpeed : 0) - (movingLeft ? fighterSpeed : 0);
   }
+  player.x += player.vel.x;
 
   if (keyIsDown(87) && player.y >= ringFloor - 49) {
     player.vel.y = -11;
@@ -205,6 +207,7 @@ function updateOpponent() {
       opponent.blocking = true;
     }
   }
+  opponent.x += opponent.vel.x;
 }
 
 function updateFacing() {
@@ -257,7 +260,7 @@ function resolveHit(attacker, target, move) {
     opponentHealth = max(0, opponentHealth - damage);
     opponentStun = move.stun;
   }
-  target.vel.x = attacker.facing * (target.blocking ? 2 : 6);
+  target.x += attacker.facing * (target.blocking ? 4 : 12);
 }
 
 function drawFighterDetails(fighter) {
