@@ -15,6 +15,8 @@ let lastDamageAt = 0;
 let attackStartedAt = -1000;
 let attackResolved = false;
 let playerFacing = 1;
+let comboStep = 0;
+let comboExpiresAt = 0;
 
 function setup() {
   createCanvas(arenaWidth, arenaHeight);
@@ -156,13 +158,14 @@ function drawSlash() {
 
   push();
   noFill();
-  stroke('#b9f5ff');
-  strokeWeight(7);
+  stroke(comboStep === 3 ? '#ffe88a' : '#b9f5ff');
+  strokeWeight(comboStep === 3 ? 10 : 7);
   const slashX = player.x + playerFacing * 38;
-  arc(slashX, player.y - 5, 62, 72, playerFacing > 0 ? -1.1 : PI - 1.1, playerFacing > 0 ? 1.1 : PI + 1.1);
+  const slashSize = comboStep === 3 ? 100 : 72;
+  arc(slashX, player.y - 5, slashSize, slashSize, playerFacing > 0 ? -1.1 : PI - 1.1, playerFacing > 0 ? 1.1 : PI + 1.1);
   stroke('#ffffff');
   strokeWeight(2);
-  line(player.x + playerFacing * 12, player.y - 15, player.x + playerFacing * 55, player.y + 8);
+  line(player.x + playerFacing * 12, player.y - 15, player.x + playerFacing * (comboStep === 3 ? 70 : 55), player.y + 8);
   pop();
 }
 
@@ -175,6 +178,9 @@ function drawHud() {
   text(`Wraiths: ${defeatedEnemies}/${enemiesToDefeat}`, 22, 26);
   fill('#ff98c7');
   text(`Health: ${'♥ '.repeat(playerHealth)}`, 22, 53);
+  fill('#c7f5ff');
+  const visibleCombo = millis() < comboExpiresAt ? comboStep : 0;
+  text(`Combo: ${visibleCombo}/3`, 22, 80);
   textStyle(NORMAL);
 
   textAlign(RIGHT, CENTER);
@@ -261,17 +267,20 @@ function spawnEnemies() {
 }
 
 function resolveSlash() {
-  const slashReach = 92;
+  if (attackResolved) return;
+  attackResolved = true;
+
+  const slashReach = comboStep === 3 ? 128 : comboStep === 2 ? 104 : 92;
+  const verticalReach = comboStep === 3 ? 70 : 55;
 
   for (const enemy of enemies) {
     const horizontalDistance = (enemy.x - player.x) * playerFacing;
     const verticalDistance = abs(enemy.y - player.y);
 
-    if (horizontalDistance > 8 && horizontalDistance < slashReach && verticalDistance < 55) {
+    if (horizontalDistance > 8 && horizontalDistance < slashReach && verticalDistance < verticalReach) {
       enemy.remove();
       defeatedEnemies++;
-      attackResolved = true;
-      return;
+      if (comboStep !== 3) return;
     }
   }
 }
@@ -312,6 +321,8 @@ function resetGame() {
   lastDamageAt = 0;
   attackStartedAt = -1000;
   attackResolved = false;
+  comboStep = 0;
+  comboExpiresAt = 0;
   playerFacing = 1;
   player.x = 125;
   player.y = height - 100;
@@ -322,12 +333,14 @@ function resetGame() {
 function keyPressed() {
   if (key === ' ' || keyCode === UP_ARROW || key === 'w' || key === 'W') {
     if (gameState === 'playing' && player.colliding(platforms)) {
-      player.vel.y = -10;
+      player.vel.y = -7;
     }
   }
 
   if (key === 'j' || key === 'J' || key === 'x' || key === 'X') {
-    if (gameState === 'playing' && millis() - attackStartedAt > 320) {
+    if (gameState === 'playing' && millis() - attackStartedAt > 240) {
+      comboStep = millis() <= comboExpiresAt ? comboStep % 3 + 1 : 1;
+      comboExpiresAt = millis() + 900;
       attackStartedAt = millis();
       attackResolved = false;
       resolveSlash();
