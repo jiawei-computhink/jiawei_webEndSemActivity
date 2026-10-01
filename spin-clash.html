@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spin Clash</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px;
+        background: #090b18;
+        color: #eefaff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 960px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #8af7ff;
+        text-shadow: 0 0 14px #22dfff;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #c4cbe4;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #ff8bdf;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 900px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #ff6993;
+        border-radius: 12px;
+        box-shadow: 0 0 24px #ff4d7066;
+      }
+
+      .controls {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Spin Clash</h1>
+      <p>Knock the rival spinning top out of the arena to be the last one spinning!</p>
+      <p class="controls">Move your mouse to steer &nbsp; | &nbsp; Click to boost &nbsp; | &nbsp; Click after a round to play again</p>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="spin-clash.js"></script>
+  </body>
+</html>
