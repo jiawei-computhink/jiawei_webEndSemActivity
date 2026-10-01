@@ -9,10 +9,14 @@ let puck;
 let walls;
 let scores;
 let gameState = 'ready';
+const pressedKeys = new Set();
 
 function setup() {
   createCanvas(rinkWidth, rinkHeight);
   world.gravity.y = 0;
+  document.addEventListener('keydown', (event) => pressedKeys.add(event.code));
+  document.addEventListener('keyup', (event) => pressedKeys.delete(event.code));
+  window.addEventListener('blur', () => pressedKeys.clear());
 
   walls = new Group();
   walls.collider = 'static';
@@ -130,10 +134,10 @@ function showMessage(title, subtitle) {
 
 function movePaddles() {
   const speed = 5;
-  playerOne.vel.x = (kb.pressing('d') ? speed : 0) - (kb.pressing('a') ? speed : 0);
-  playerOne.vel.y = (kb.pressing('s') ? speed : 0) - (kb.pressing('w') ? speed : 0);
-  playerTwo.vel.x = (kb.pressing('right') ? speed : 0) - (kb.pressing('left') ? speed : 0);
-  playerTwo.vel.y = (kb.pressing('down') ? speed : 0) - (kb.pressing('up') ? speed : 0);
+  playerOne.vel.x = (pressedKeys.has('KeyD') ? speed : 0) - (pressedKeys.has('KeyA') ? speed : 0);
+  playerOne.vel.y = (pressedKeys.has('KeyS') ? speed : 0) - (pressedKeys.has('KeyW') ? speed : 0);
+  playerTwo.vel.x = (pressedKeys.has('ArrowRight') ? speed : 0) - (pressedKeys.has('ArrowLeft') ? speed : 0);
+  playerTwo.vel.y = (pressedKeys.has('ArrowDown') ? speed : 0) - (pressedKeys.has('ArrowUp') ? speed : 0);
 
   keepPaddleInBounds(playerOne, 52, width / 2 - 32);
   keepPaddleInBounds(playerTwo, width / 2 + 32, width - 52);
