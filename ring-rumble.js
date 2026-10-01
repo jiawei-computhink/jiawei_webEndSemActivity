@@ -51,7 +51,6 @@ function draw() {
     updateBout();
   }
 
-  drawSprites();
   drawFighterDetails(player);
   drawFighterDetails(opponent);
   drawHud();
