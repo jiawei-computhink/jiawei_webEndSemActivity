@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neon Air Hockey</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px;
+        background: #090b18;
+        color: #eefaff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 960px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #8af7ff;
+        text-shadow: 0 0 14px #22dfff;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #c4cbe4;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #ff8bdf;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 900px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #34eaff;
+        border-radius: 12px;
+        box-shadow: 0 0 24px #1acbff55;
+      }
+
+      .controls {
+        margin-top: 14px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Neon Air Hockey</h1>
+      <p>First player to 5 goals wins. Challenge a friend on the same keyboard!</p>
+      <div class="controls">Player 1: W A S D &nbsp; | &nbsp; Player 2: Arrow keys</div>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="neon-air-hockey.js"></script>
+  </body>
+</html>
