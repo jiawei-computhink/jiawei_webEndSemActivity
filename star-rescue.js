@@ -83,10 +83,10 @@ function updatePlayer() {
   let horizontal = 0;
   let vertical = 0;
 
-  if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) horizontal--;
-  if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) horizontal++;
-  if (keyIsDown(UP_ARROW) || keyIsDown(87)) vertical--;
-  if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) vertical++;
+  if (kb.pressing('left') || kb.pressing('a')) horizontal--;
+  if (kb.pressing('right') || kb.pressing('d')) horizontal++;
+  if (kb.pressing('up') || kb.pressing('w')) vertical--;
+  if (kb.pressing('down') || kb.pressing('s')) vertical++;
 
   const movementLength = Math.hypot(horizontal, vertical) || 1;
   player.x += (horizontal / movementLength) * playerSpeed;
