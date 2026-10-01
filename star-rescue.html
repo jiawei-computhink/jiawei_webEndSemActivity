@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Star Rescue</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px;
+        background: #090b18;
+        color: #eefaff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 860px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #ffe680;
+        text-shadow: 0 0 14px #ffca40;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #c4cbe4;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #8af7ff;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 800px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #6b7dff;
+        border-radius: 12px;
+        box-shadow: 0 0 24px #506cff55;
+      }
+
+      .controls {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Star Rescue</h1>
+      <p>Collect 5 stars before time runs out. Dodge the asteroids!</p>
+      <p class="controls">Move: WASD or Arrow keys &nbsp; | &nbsp; Start/restart: Enter or click</p>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="star-rescue.js"></script>
+  </body>
+</html>
