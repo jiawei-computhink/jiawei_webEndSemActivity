@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Moonlit Blade</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px;
+        background: #101329;
+        color: #e8eeff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 960px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #c7f5ff;
+        text-shadow: 0 0 14px #6f9dff;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #c4cbe4;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #ff98c7;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 900px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #7f91c8;
+        border-radius: 12px;
+        box-shadow: 0 0 24px #5261a855;
+      }
+
+      .controls {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Moonlit Blade</h1>
+      <p>A masked knight descends into a moonlit cavern. Defeat all eight wraiths to clear the arena.</p>
+      <p class="controls">Move: A/D or ←/→ &nbsp; | &nbsp; Jump: W, ↑, or Space &nbsp; | &nbsp; Slash: J or X &nbsp; | &nbsp; Restart: R</p>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="moonlit-blade.js"></script>
+  </body>
+</html>
