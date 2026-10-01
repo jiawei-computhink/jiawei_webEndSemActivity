@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clockwork Arena</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px;
+        background: #17130f;
+        color: #f7e9ca;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 960px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #ffc46b;
+        text-shadow: 0 0 14px #b75c1f;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #d7c6a5;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #8de2d1;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 900px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #d08a45;
+        border-radius: 12px;
+        box-shadow: 0 0 24px #b75c1f55;
+      }
+
+      .controls {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Clockwork Arena</h1>
+      <p>Survive the clockwork horde for 60 seconds and shoot the brass valves in code order.</p>
+      <p class="controls">Move: WASD &nbsp; | &nbsp; Aim: Arrow keys or mouse &nbsp; | &nbsp; Fire: Space or click</p>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="clockwork-arena.js"></script>
+  </body>
+</html>
