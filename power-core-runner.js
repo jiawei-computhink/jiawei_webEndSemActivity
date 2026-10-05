@@ -24,6 +24,8 @@ function setup() {
 }
 
 function createLevel() {
+  addPlatform(levelWidth / 2, floorY + 18, levelWidth, 36);
+
   player = new Sprite(70, floorY - 32, 32, 48, 'dynamic');
   player.color = '#45eaff';
   player.stroke = '#d9fbff';
@@ -180,7 +182,7 @@ function updateGame() {
 }
 
 function fireShot() {
-  const shot = new Sprite(player.x + facing * 26, player.y - 2, 22, 8, 'none');
+  const shot = new Sprite(player.x + facing * 26, player.y - 2, 22, 8, 'kinematic');
   shot.color = '#ffe66d';
   shot.stroke = '#fff8c7';
   shot.vel.x = facing * 9;
