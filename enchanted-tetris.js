@@ -169,6 +169,7 @@ function lockPiece() {
   });
 
   clearFullRows();
+  if (gameState === 'won') return;
   spawnPiece();
   lastFallTime = millis();
 }
@@ -299,12 +300,13 @@ function drawEndMessage() {
   textStyle(BOLD);
   textSize(24);
   fill(gameState === 'won' ? '#a7ffc5' : '#ff9ebd');
-  text(gameState === 'won' ? 'HALL CLEARED!' : 'THE MAGIC FADES', canvasWidth / 2, boardY + 268);
+  const boardCenterX = boardX + boardWidth / 2;
+  text(gameState === 'won' ? 'HALL CLEARED!' : 'THE MAGIC FADES', boardCenterX, boardY + 268);
   textStyle(NORMAL);
   textSize(14);
   fill('#f5efff');
-  text(gameState === 'won' ? 'You cleared 10 lines!' : 'The runes reached the top.', canvasWidth / 2, boardY + 300);
-  text('Press R to play again', canvasWidth / 2, boardY + 326);
+  text(gameState === 'won' ? 'You cleared 10 lines!' : 'The runes reached the top.', boardCenterX, boardY + 300);
+  text('Press R to play again', boardCenterX, boardY + 326);
 }
 
 function gridToX(gridX) {
