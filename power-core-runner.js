@@ -5,7 +5,7 @@ const floorY = 470;
 const coreGoal = 3;
 
 let player;
-let platforms = [];
+let platforms;
 let enemies = [];
 let cores = [];
 let shots = [];
@@ -20,6 +20,8 @@ let damageCooldown = 0;
 function setup() {
   createCanvas(screenWidth, screenHeight);
   world.gravity.y = 0.65;
+  platforms = new Group();
+  platforms.collider = 'static';
   createLevel();
 }
 
@@ -59,10 +61,9 @@ function createLevel() {
 }
 
 function addPlatform(x, y, w, h) {
-  const platform = new Sprite(x, y, w, h, 'static');
+  const platform = new platforms.Sprite(x, y, w, h);
   platform.color = '#273952';
   platform.stroke = '#58daee';
-  platforms.push(platform);
 }
 
 function addEnemy(x, y) {
@@ -157,10 +158,8 @@ function updateGame() {
     enemy.vel.x = enemy.patrolDirection * 1.1;
   }
 
-  for (const platform of platforms) {
-    player.collides(platform);
-    for (const enemy of enemies) enemy.collides(platform);
-  }
+  player.collides(platforms);
+  for (const enemy of enemies) enemy.collides(platforms);
 
   updateShots();
   collectCores();
