@@ -152,10 +152,9 @@ function updateGame() {
   }
 
   for (const enemy of enemies) {
+    if (enemy.x > enemy.patrolOrigin + 65) enemy.patrolDirection = -1;
+    if (enemy.x < enemy.patrolOrigin - 65) enemy.patrolDirection = 1;
     enemy.vel.x = enemy.patrolDirection * 1.1;
-    if (abs(enemy.x - enemy.patrolOrigin) > 65) {
-      enemy.patrolDirection *= -1;
-    }
   }
 
   for (const platform of platforms) {
@@ -251,7 +250,7 @@ function drawHud() {
   fill('#effbff');
   text(`CORES  ${coresCollected} / ${coreGoal}`, 30, 38);
   fill('#ff7892');
-  text(`HULL  ${'♥'.repeat(max(0, health))}`, 30, 64);
+  text(`HULL  ${max(0, health)} / 3`, 30, 64);
   textStyle(NORMAL);
 }
 
@@ -270,7 +269,7 @@ function drawOverlay(title, detail, instruction) {
   textSize(16);
   fill('#e1efff');
   text(detail, width / 2, height / 2 - 12);
-  text('Move: ← / →    Jump: ↑    Fire: SPACE', width / 2, height / 2 + 24);
+  text('Move: LEFT / RIGHT    Jump: UP    Fire: SPACE', width / 2, height / 2 + 24);
   fill('#ffe66d');
   text(instruction, width / 2, height / 2 + 65);
 }
