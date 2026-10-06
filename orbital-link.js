@@ -49,7 +49,7 @@ function createBoard() {
 
   for (const data of pathLayout) {
     const conduit = cellsByPosition.get(`${data.col},${data.row}`);
-    conduit.shape = data.shape;
+    conduit.tileShape = data.shape;
     conduit.col = data.col;
     conduit.row = data.row;
     conduit.solution = data.solution;
@@ -193,7 +193,7 @@ function drawOverlay(title, message, instruction) {
 }
 
 function getConnectors(conduit) {
-  const baseConnectors = conduit.shape === 'straight' ? ['N', 'S'] : ['N', 'E'];
+  const baseConnectors = conduit.tileShape === 'straight' ? ['N', 'S'] : ['N', 'E'];
   return baseConnectors.map((direction) => {
     const directionIndex = directions.indexOf(direction);
     return directions[(directionIndex + conduit.orientation) % directions.length];
