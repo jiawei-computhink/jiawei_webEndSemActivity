@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gearworks: Brass Circuit</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 26px 16px;
+        background: #17120e;
+        color: #f8e7c3;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 980px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #f3bd69;
+        text-shadow: 0 0 14px #9f5724;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #ddc9a5;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #8de2d1;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 960px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #bd8148;
+        border-radius: 12px;
+        box-shadow: 0 0 24px #9f572455;
+      }
+
+      .controls {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Gearworks: Brass Circuit</h1>
+      <p>Build a working gear train from the boiler to the dynamo, then score as many points as you can.</p>
+      <p class="controls">Mouse only: drag gears from the tray onto empty board cells. Drag a placed gear to move it or return it to the tray. Avoid the jammed valve.</p>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="gearworks.js"></script>
+  </body>
+</html>
