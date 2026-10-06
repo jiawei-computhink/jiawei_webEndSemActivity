@@ -143,7 +143,7 @@ function updateGame() {
   if (movingLeft) facing = -1;
   if (movingRight) facing = 1;
 
-  if (kb.presses('up') && player.touching.bottom) {
+  if (kb.presses('up') && player.colliding(platforms)) {
     player.vel.y = -12;
   }
 
