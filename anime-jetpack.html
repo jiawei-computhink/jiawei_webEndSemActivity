@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Starbound Sprint</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px 36px;
+        background:
+          radial-gradient(ellipse at 50% 0%, #26346a 0%, transparent 52%),
+          #090b18;
+        color: #f3f2ff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 960px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        color: #ffb1e5;
+        font-size: clamp(28px, 6vw, 42px);
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 18px #fb58c5aa;
+      }
+
+      p {
+        margin: 8px 0 14px;
+        color: #d4d7f5;
+        line-height: 1.55;
+      }
+
+      .tagline {
+        color: #a8efff;
+        font-size: 14px;
+      }
+
+      #game-canvas {
+        width: 100%;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 900px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #67eaff;
+        border-radius: 14px;
+        box-shadow: 0 0 30px #25dfff45;
+      }
+
+      .boost-button {
+        display: inline-block;
+        min-width: 200px;
+        min-height: 52px;
+        margin: 16px 0 2px;
+        border: 1px solid #ff9adb;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #a53091, #572db1);
+        color: white;
+        font: 700 15px Arial, sans-serif;
+        letter-spacing: 0.08em;
+        touch-action: none;
+        user-select: none;
+        box-shadow: 0 0 18px #f05cc455;
+      }
+
+      .boost-button:active {
+        background: linear-gradient(135deg, #d340af, #7141d7);
+        transform: translateY(1px);
+      }
+
+      .controls {
+        margin-top: 8px;
+        font-size: 14px;
+      }
+
+      a {
+        color: #9fefff;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Starbound Sprint</h1>
+      <p class="tagline">A neon anime sky-run through the starlit city.</p>
+      <p>Hold <strong>SPACE</strong> to fire your jetpack and rise. Let go to fall. Dodge every drone and reach <strong>1,000 m</strong> to win. Touching a drone or the top or bottom of the flight lane ends the run.</p>
+      <div id="game-canvas"></div>
+      <button class="boost-button" id="boost-button" type="button" aria-label="Hold to boost upward">HOLD TO BOOST</button>
+      <p class="controls">Keyboard: hold SPACE to fly · ENTER or R to start/restart · You can also hold the button above.</p>
+      <p><a href="index.html">Back to all games</a></p>
+    </main>
+    <script src="anime-jetpack.js"></script>
+  </body>
+</html>
