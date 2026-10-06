@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Orbital Link</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/planck.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5play@3.8.14/p5play.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 16px;
+        background: #071426;
+        color: #eef8ff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+
+      main {
+        width: min(100%, 840px);
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: #86edff;
+        text-shadow: 0 0 14px #23bce8;
+      }
+
+      p {
+        margin: 8px 0 16px;
+        color: #c6d9e9;
+        line-height: 1.5;
+      }
+
+      a {
+        color: #ffc4f2;
+      }
+
+      canvas {
+        display: block;
+        width: min(100%, 800px);
+        height: auto;
+        margin: 0 auto;
+        border: 1px solid #4adcf3;
+        border-radius: 10px;
+        box-shadow: 0 0 24px #22bce855;
+      }
+
+      .controls {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Orbital Link</h1>
+      <p>Rotate the conduits to route reactor energy to the escape pod before your moves run out.</p>
+      <p class="controls">Select a conduit: click it or use the arrow keys &nbsp; | &nbsp; Rotate: click, Space, or Enter &nbsp; | &nbsp; Restart: R</p>
+      <p><a href="index.html">Back to home</a></p>
+    </main>
+    <script src="orbital-link.js"></script>
+  </body>
+</html>
