@@ -34,6 +34,7 @@ function createBoard() {
   boardCells = new Group();
   boardCells.collider = 'none';
   conduits = [];
+  const cellsByPosition = new Map();
 
   for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
@@ -42,11 +43,12 @@ function createBoard() {
       cell.stroke = '#294b69';
       cell.strokeWeight = 1;
       cell.rotationLock = true;
+      cellsByPosition.set(`${col},${row}`, cell);
     }
   }
 
   for (const data of pathLayout) {
-    const conduit = boardCells.find((cell) => cell.x === cellCenterX(data.col) && cell.y === cellCenterY(data.row));
+    const conduit = cellsByPosition.get(`${data.col},${data.row}`);
     conduit.shape = data.shape;
     conduit.col = data.col;
     conduit.row = data.row;
