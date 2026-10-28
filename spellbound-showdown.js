@@ -581,13 +581,14 @@ function resetActor(actor, health, facing) {
 }
 
 function startGame() {
-  if (rivals.length === 0) {
-    rivals = [
-      makeActor(735, floorY - actorHalfHeight, rivalColors[0], 'rival'),
-      makeActor(475, 310, rivalColors[1], 'rival'),
-      makeActor(880, 275, rivalColors[2], 'rival')
-    ];
+  for (const rival of rivals) {
+    rival.remove();
   }
+  rivals = [
+    makeActor(735, floorY - actorHalfHeight, rivalColors[0], 'rival'),
+    makeActor(475, 310, rivalColors[1], 'rival'),
+    makeActor(880, 275, rivalColors[2], 'rival')
+  ];
   resetRound();
   gameState = 'playing';
 }
