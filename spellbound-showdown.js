@@ -638,7 +638,7 @@ function resetRound() {
   playerShotsInBurst = 0;
   isPlayerReloading = false;
   spreadPowerup = null;
-  spreadPowerupSpawnTimer = 7000;
+  spreadPowerupSpawnTimer = 0;
   spreadShotTimer = 0;
   jumpWasHeld = false;
 
@@ -662,6 +662,7 @@ function resetRound() {
     projectile.remove();
   }
   projectiles = [];
+  spawnSpreadPowerup();
 }
 
 function resetActor(actor, health, facing) {
