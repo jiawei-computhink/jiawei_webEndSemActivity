@@ -9,6 +9,7 @@ const rivalMaxHealth = 60;
 const shotsPerBurst = 5;
 const shotCooldown = 310;
 const reloadCooldown = 600;
+const spreadPowerupDuration = 8000;
 const playerColor = '#54e6cf';
 const rivalColors = ['#fa6d9a', '#b58aff', '#ffb84f'];
 
@@ -35,6 +36,9 @@ let playerHealth = playerMaxHealth;
 let fireCooldown = 0;
 let playerShotsInBurst = 0;
 let isPlayerReloading = false;
+let spreadPowerup = null;
+let spreadPowerupSpawnTimer = 7000;
+let spreadShotTimer = 0;
 let elapsedTime = 0;
 let jumpWasHeld = false;
 
@@ -83,6 +87,9 @@ function draw() {
   drawSprites();
   drawActors();
   drawProjectiles();
+  if (gameState === 'playing') {
+    drawSpreadPowerup();
+  }
   drawHud();
   drawTouchControls();
 
@@ -173,6 +180,7 @@ function updateGame() {
   if (fireCooldown === 0) {
     isPlayerReloading = false;
   }
+  updateSpreadPowerup();
   updatePlayer(step);
 
   for (const rival of rivals) {
@@ -190,6 +198,38 @@ function updateGame() {
   } else if (rivals.length === 0) {
     gameState = 'won';
   }
+}
+
+function updateSpreadPowerup() {
+  if (spreadShotTimer > 0) {
+    spreadShotTimer = max(0, spreadShotTimer - deltaTime);
+  }
+
+  if (!spreadPowerup) {
+    spreadPowerupSpawnTimer -= deltaTime;
+    if (spreadPowerupSpawnTimer <= 0) {
+      spawnSpreadPowerup();
+    }
+    return;
+  }
+
+  spreadPowerup.pickupBob += deltaTime * 0.006;
+  const touchingPickup = abs(player.x - spreadPowerup.pickupX) < actorHalfWidth + 18
+    && abs(player.y - spreadPowerup.pickupY) < actorHalfHeight + 18;
+  if (touchingPickup) {
+    spreadPowerup = null;
+    spreadShotTimer = spreadPowerupDuration;
+    spreadPowerupSpawnTimer = 9000;
+  }
+}
+
+function spawnSpreadPowerup() {
+  const platform = platforms[floor(random(1, platforms.length))];
+  spreadPowerup = {
+    pickupX: random(platform.x + 25, platform.x + platform.width - 25),
+    pickupY: platform.y - 22,
+    pickupBob: 0
+  };
 }
 
 function updatePlayer(step) {
@@ -292,6 +332,29 @@ function fireSpell(shooter, isPlayerShot) {
   const aimLength = max(1, sqrt(aimX * aimX + aimY * aimY));
   const directionX = aimX / aimLength;
   const directionY = aimY / aimLength;
+  const spreadAngles = isPlayerShot && spreadShotTimer > 0
+    ? [-0.28, 0, 0.28]
+    : [0];
+
+  for (const spreadAngle of spreadAngles) {
+    const shotDirectionX = directionX * cos(spreadAngle) - directionY * sin(spreadAngle);
+    const shotDirectionY = directionX * sin(spreadAngle) + directionY * cos(spreadAngle);
+    createProjectile(shooter, shotDirectionX, shotDirectionY, isPlayerShot);
+  }
+
+  if (isPlayerShot) {
+    playerShotsInBurst++;
+    if (playerShotsInBurst === shotsPerBurst) {
+      playerShotsInBurst = 0;
+      isPlayerReloading = true;
+      fireCooldown = reloadCooldown;
+    } else {
+      fireCooldown = shotCooldown;
+    }
+  }
+}
+
+function createProjectile(shooter, directionX, directionY, isPlayerShot) {
   const projectile = new Sprite(
     shooter.x + directionX * 24,
     shooter.y + directionY * 24,
@@ -306,17 +369,6 @@ function fireSpell(shooter, isPlayerShot) {
   projectile.shotLife = 1700;
   projectile.shotColor = isPlayerShot ? '#9cfff0' : shooter.gameColor;
   projectiles.push(projectile);
-
-  if (isPlayerShot) {
-    playerShotsInBurst++;
-    if (playerShotsInBurst === shotsPerBurst) {
-      playerShotsInBurst = 0;
-      isPlayerReloading = true;
-      fireCooldown = reloadCooldown;
-    } else {
-      fireCooldown = shotCooldown;
-    }
-  }
 }
 
 function updateProjectiles(step) {
@@ -469,6 +521,25 @@ function drawProjectiles() {
   }
 }
 
+function drawSpreadPowerup() {
+  if (!spreadPowerup) return;
+
+  const bobY = sin(spreadPowerup.pickupBob) * 5;
+  noStroke();
+  fill(255, 207, 100, 45);
+  circle(spreadPowerup.pickupX, spreadPowerup.pickupY + bobY, 42);
+  fill('#ffca62');
+  circle(spreadPowerup.pickupX, spreadPowerup.pickupY + bobY, 27);
+  fill('#fff2bd');
+  textAlign(CENTER, CENTER);
+  textStyle(BOLD);
+  textSize(18);
+  text('✦', spreadPowerup.pickupX, spreadPowerup.pickupY + bobY);
+  fill('#fff0ad');
+  textSize(11);
+  text('CONE', spreadPowerup.pickupX, spreadPowerup.pickupY + bobY + 27);
+}
+
 function drawHud() {
   noStroke();
   fill(14, 16, 39, 225);
@@ -490,6 +561,10 @@ function drawHud() {
   textSize(12);
   fill(isPlayerReloading ? '#ffd879' : '#c9f8ed');
   text(isPlayerReloading ? 'RECHARGING SPELLS' : 'SPELLS: ' + playerShotsInBurst + '/' + shotsPerBurst, width / 2, 60);
+  if (spreadShotTimer > 0) {
+    fill('#ffcf70');
+    text('CONE SHOT ' + (spreadShotTimer / 1000).toFixed(1) + 's', width / 2, 73);
+  }
 
   textAlign(RIGHT, CENTER);
   fill('#d7defa');
@@ -564,6 +639,9 @@ function resetRound() {
   fireCooldown = 0;
   playerShotsInBurst = 0;
   isPlayerReloading = false;
+  spreadPowerup = null;
+  spreadPowerupSpawnTimer = 7000;
+  spreadShotTimer = 0;
   jumpWasHeld = false;
 
   player.x = 170;
