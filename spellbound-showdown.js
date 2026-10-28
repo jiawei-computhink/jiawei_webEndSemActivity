@@ -153,7 +153,7 @@ function draw() {
   drawTouchControls();
 
   if (gameState === 'title') {
-    drawOverlay('SPELLBOUND SHOWDOWN', 'A magical platform battle!', 'Defeat all three rivals to win. Click or press ENTER to begin.');
+    drawOverlay('SPELLBOUND SHOWDOWN', 'A magical platform battle!', 'Clear all three stages to become the arena champion.');
   } else if (gameState === 'won') {
     drawOverlay('ARENA CHAMPION!', 'Every rival has been defeated.', 'Click, tap, or press R to play again.');
   } else if (gameState === 'lost') {
@@ -276,9 +276,7 @@ function updateGame() {
 function updateLevelTransition() {
   levelTransitionTimer = max(0, levelTransitionTimer - deltaTime);
   if (levelTransitionTimer === 0) {
-    levelIndex++;
-    loadLevel();
-    gameState = 'playing';
+    startNextLevel();
   }
 }
 
@@ -623,15 +621,16 @@ function drawSpreadPowerup() {
 }
 
 function drawHud() {
+  const level = levels[levelIndex];
   noStroke();
   fill(14, 16, 39, 225);
   rect(0, 0, width, 76);
 
   textAlign(LEFT, CENTER);
   textStyle(BOLD);
-  textSize(18);
-  fill('#fff0ad');
-  text('MOONLIT ARENA', 22, 21);
+  textSize(15);
+  fill(level.platformTopColor);
+  text('STAGE ' + (levelIndex + 1) + ': ' + level.name, 22, 21);
   textSize(13);
   fill('#e0d9fb');
   text('RIVALS LEFT: ' + rivals.length, 22, 51);
@@ -713,8 +712,9 @@ function drawOverlay(title, subtitle, instruction) {
   text('Move and jump between the floating platforms. Aim and fire at every rival!', width / 2, 354);
 }
 
-function resetRound() {
-  playerHealth = playerMaxHealth;
+function loadLevel() {
+  const level = levels[levelIndex];
+  platforms = level.platforms;
   elapsedTime = 0;
   fireCooldown = 0;
   playerShotsInBurst = 0;
@@ -724,26 +724,29 @@ function resetRound() {
   spreadShotTimer = 0;
   jumpWasHeld = false;
 
+  for (const rival of rivals) {
+    rival.remove();
+  }
+  rivals = level.rivalStarts.map((start, index) => {
+    const rival = makeActor(
+      start.x,
+      start.y,
+      rivalColors[index % rivalColors.length],
+      'rival'
+    );
+    resetActor(rival, rivalMaxHealth, start.x < arenaWidth / 2 ? 1 : -1);
+    return rival;
+  });
+
   player.x = 170;
   player.y = floorY - actorHalfHeight;
   resetActor(player, playerMaxHealth, 1);
-
-  const rivalStarts = [
-    { x: 735, y: floorY - actorHalfHeight },
-    { x: 475, y: 310 },
-    { x: 880, y: 275 }
-  ];
-  for (let index = 0; index < rivals.length; index++) {
-    const rival = rivals[index];
-    rival.x = rivalStarts[index].x;
-    rival.y = rivalStarts[index].y;
-    resetActor(rival, rivalMaxHealth, -1);
-  }
 
   for (const projectile of projectiles) {
     projectile.remove();
   }
   projectiles = [];
+  spreadPowerupSpawnTimer = 0;
   spawnSpreadPowerup();
 }
 
@@ -760,26 +763,27 @@ function resetActor(actor, health, facing) {
 }
 
 function startGame() {
-  for (const rival of rivals) {
-    rival.remove();
-  }
-  rivals = [
-    makeActor(735, floorY - actorHalfHeight, rivalColors[0], 'rival'),
-    makeActor(475, 310, rivalColors[1], 'rival'),
-    makeActor(880, 275, rivalColors[2], 'rival')
-  ];
-  resetRound();
+  levelIndex = 0;
+  playerHealth = playerMaxHealth;
+  loadLevel();
+  gameState = 'playing';
+}
+
+function startNextLevel() {
+  levelIndex++;
+  playerHealth = min(playerMaxHealth, playerHealth + 25);
+  loadLevel();
   gameState = 'playing';
 }
 
 function mousePressed() {
-  if (gameState !== 'playing') {
+  if (gameState === 'title' || gameState === 'won' || gameState === 'lost') {
     startGame();
   }
 }
 
 function touchStarted() {
-  if (gameState !== 'playing') {
+  if (gameState === 'title' || gameState === 'won' || gameState === 'lost') {
     startGame();
   }
   return false;
