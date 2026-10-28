@@ -6,6 +6,9 @@ const actorHalfHeight = 25;
 const gravityStep = 0.55;
 const playerMaxHealth = 100;
 const rivalMaxHealth = 60;
+const shotsPerBurst = 5;
+const shotCooldown = 310;
+const reloadCooldown = 600;
 const playerColor = '#54e6cf';
 const rivalColors = ['#fa6d9a', '#b58aff', '#ffb84f'];
 
@@ -30,6 +33,8 @@ let projectiles = [];
 let gameState = 'title';
 let playerHealth = playerMaxHealth;
 let fireCooldown = 0;
+let playerShotsInBurst = 0;
+let isPlayerReloading = false;
 let elapsedTime = 0;
 let jumpWasHeld = false;
 
@@ -165,6 +170,9 @@ function updateGame() {
   const step = constrain(deltaTime / 16.67, 0, 2);
   elapsedTime += deltaTime;
   fireCooldown = max(0, fireCooldown - deltaTime);
+  if (fireCooldown === 0) {
+    isPlayerReloading = false;
+  }
   updatePlayer(step);
 
   for (const rival of rivals) {
@@ -300,7 +308,14 @@ function fireSpell(shooter, isPlayerShot) {
   projectiles.push(projectile);
 
   if (isPlayerShot) {
-    fireCooldown = 310;
+    playerShotsInBurst++;
+    if (playerShotsInBurst === shotsPerBurst) {
+      playerShotsInBurst = 0;
+      isPlayerReloading = true;
+      fireCooldown = reloadCooldown;
+    } else {
+      fireCooldown = shotCooldown;
+    }
   }
 }
 
@@ -472,6 +487,9 @@ function drawHud() {
   textAlign(CENTER, CENTER);
   text('YOUR HEALTH', width / 2, 19);
   drawHealthBar(width / 2 - 115, 34, 230, playerHealth, playerMaxHealth, playerColor);
+  textSize(12);
+  fill(isPlayerReloading ? '#ffd879' : '#c9f8ed');
+  text(isPlayerReloading ? 'RECHARGING SPELLS' : 'SPELLS: ' + playerShotsInBurst + '/' + shotsPerBurst, width / 2, 60);
 
   textAlign(RIGHT, CENTER);
   fill('#d7defa');
@@ -544,6 +562,8 @@ function resetRound() {
   playerHealth = playerMaxHealth;
   elapsedTime = 0;
   fireCooldown = 0;
+  playerShotsInBurst = 0;
+  isPlayerReloading = false;
   jumpWasHeld = false;
 
   player.x = 170;
