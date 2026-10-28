@@ -193,7 +193,7 @@ function drawStars() {
 
 function drawMoon(level) {
   noStroke();
-  fill(level.islandColor + '40');
+  fill(level.islandColor);
   circle(780, 125, 150);
   fill(level.platformTopColor);
   circle(780, 125, 94);
