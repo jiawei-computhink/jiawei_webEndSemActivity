@@ -13,13 +13,73 @@ const spreadPowerupDuration = 8000;
 const playerColor = '#54e6cf';
 const rivalColors = ['#fa6d9a', '#b58aff', '#ffb84f'];
 
-const platforms = [
-  { x: 0, y: floorY, width: arenaWidth, height: 95 },
-  { x: 120, y: 430, width: 215, height: 20 },
-  { x: 625, y: 430, width: 215, height: 20 },
-  { x: 365, y: 335, width: 230, height: 20 },
-  { x: 35, y: 300, width: 115, height: 18 },
-  { x: 810, y: 300, width: 115, height: 18 }
+const levels = [
+  {
+    name: 'Moonlit Meadow',
+    skyTop: '#171b3c',
+    skyBottom: '#3b285e',
+    islandColor: '#79c98d',
+    platformColor: '#433567',
+    platformTopColor: '#9be6ad',
+    platforms: [
+      { x: 0, y: floorY, width: arenaWidth, height: 95 },
+      { x: 120, y: 430, width: 215, height: 20 },
+      { x: 625, y: 430, width: 215, height: 20 },
+      { x: 365, y: 335, width: 230, height: 20 },
+      { x: 35, y: 300, width: 115, height: 18 },
+      { x: 810, y: 300, width: 115, height: 18 }
+    ],
+    rivalStarts: [
+      { x: 735, y: floorY - actorHalfHeight },
+      { x: 475, y: 310 },
+      { x: 880, y: 275 }
+    ]
+  },
+  {
+    name: 'Crystal Caverns',
+    skyTop: '#102d43',
+    skyBottom: '#235b70',
+    islandColor: '#59c9bf',
+    platformColor: '#315b76',
+    platformTopColor: '#8ff2dc',
+    platforms: [
+      { x: 0, y: floorY, width: arenaWidth, height: 95 },
+      { x: 55, y: 445, width: 195, height: 20 },
+      { x: 710, y: 445, width: 195, height: 20 },
+      { x: 345, y: 405, width: 270, height: 20 },
+      { x: 165, y: 320, width: 205, height: 18 },
+      { x: 590, y: 300, width: 205, height: 18 },
+      { x: 390, y: 240, width: 180, height: 18 }
+    ],
+    rivalStarts: [
+      { x: 140, y: 420 },
+      { x: 800, y: 420 },
+      { x: 480, y: 215 }
+    ]
+  },
+  {
+    name: 'Ember Heights',
+    skyTop: '#42233b',
+    skyBottom: '#8a3d4d',
+    islandColor: '#e58a63',
+    platformColor: '#70405a',
+    platformTopColor: '#ffd17c',
+    platforms: [
+      { x: 0, y: floorY, width: arenaWidth, height: 95 },
+      { x: 70, y: 455, width: 190, height: 20 },
+      { x: 700, y: 455, width: 190, height: 20 },
+      { x: 365, y: 435, width: 230, height: 20 },
+      { x: 255, y: 345, width: 190, height: 18 },
+      { x: 515, y: 345, width: 190, height: 18 },
+      { x: 70, y: 265, width: 170, height: 18 },
+      { x: 720, y: 265, width: 170, height: 18 }
+    ],
+    rivalStarts: [
+      { x: 150, y: 430 },
+      { x: 480, y: 410 },
+      { x: 810, y: 430 }
+    ]
+  }
 ];
 
 const stars = Array.from({ length: 70 }, (_, index) => ({
@@ -31,7 +91,10 @@ const stars = Array.from({ length: 70 }, (_, index) => ({
 let player;
 let rivals = [];
 let projectiles = [];
+let platforms = levels[0].platforms;
 let gameState = 'title';
+let levelIndex = 0;
+let levelTransitionTimer = 0;
 let playerHealth = playerMaxHealth;
 let fireCooldown = 0;
 let playerShotsInBurst = 0;
@@ -46,12 +109,6 @@ function setup() {
   createCanvas(arenaWidth, arenaHeight);
   world.gravity.y = 0;
   player = makeActor(170, floorY - actorHalfHeight, playerColor, 'player');
-  rivals = [
-    makeActor(735, floorY - actorHalfHeight, rivalColors[0], 'rival'),
-    makeActor(475, 310, rivalColors[1], 'rival'),
-    makeActor(880, 275, rivalColors[2], 'rival')
-  ];
-  resetRound();
 }
 
 function makeActor(x, y, actorColor, actorType) {
@@ -82,6 +139,8 @@ function draw() {
 
   if (gameState === 'playing') {
     updateGame();
+  } else if (gameState === 'level-transition') {
+    updateLevelTransition();
   }
 
   drawSprites();
@@ -99,19 +158,26 @@ function draw() {
     drawOverlay('ARENA CHAMPION!', 'Every rival has been defeated.', 'Click, tap, or press R to play again.');
   } else if (gameState === 'lost') {
     drawOverlay('SPELLS EXHAUSTED!', 'The rival spellcasters won this round.', 'Click, tap, or press R to try again.');
+  } else if (gameState === 'level-transition') {
+    drawOverlay(
+      'STAGE CLEARED!',
+      'Next stage: ' + levels[levelIndex + 1].name,
+      'Get ready for a new arena and a different set of platforms.'
+    );
   }
 }
 
 function drawArena() {
-  background('#171b3c');
+  const level = levels[levelIndex];
+  background(level.skyTop);
   noStroke();
   for (let y = 0; y < height; y += 5) {
-    fill(lerpColor(color('#171b3c'), color('#3b285e'), y / height));
+    fill(lerpColor(color(level.skyTop), color(level.skyBottom), y / height));
     rect(0, y, width, 5);
   }
 
   drawStars();
-  drawMoon();
+  drawMoon(level);
   drawFloatingIslands();
   drawPlatforms();
 }
@@ -125,19 +191,20 @@ function drawStars() {
   }
 }
 
-function drawMoon() {
+function drawMoon(level) {
   noStroke();
-  fill(255, 232, 173, 25);
+  fill(level.islandColor + '40');
   circle(780, 125, 150);
-  fill('#ffe8ad');
+  fill(level.platformTopColor);
   circle(780, 125, 94);
-  fill('#ebd18f');
+  fill(level.islandColor);
   circle(756, 110, 12);
   circle(803, 142, 17);
   circle(792, 99, 8);
 }
 
 function drawFloatingIslands() {
+  const level = levels[levelIndex];
   noStroke();
   fill('#282348');
   ellipse(75, 235, 190, 36);
@@ -145,18 +212,19 @@ function drawFloatingIslands() {
   fill('#493665');
   ellipse(875, 205, 190, 34);
   triangle(810, 207, 940, 207, 875, 292);
-  fill('#79c98d');
+  fill(level.islandColor);
   ellipse(75, 225, 190, 24);
   ellipse(875, 195, 190, 23);
 }
 
 function drawPlatforms() {
+  const level = levels[levelIndex];
   for (let index = 0; index < platforms.length; index++) {
     const platform = platforms[index];
     noStroke();
-    fill(index === 0 ? '#302750' : '#433567');
+    fill(index === 0 ? '#302750' : level.platformColor);
     rect(platform.x, platform.y, platform.width, platform.height, 8);
-    fill(index === 0 ? '#71d49b' : '#9be6ad');
+    fill(index === 0 ? level.islandColor : level.platformTopColor);
     rect(platform.x, platform.y, platform.width, 8, 5);
     fill('#f1cf75');
     for (let decoration = platform.x + 18; decoration < platform.x + platform.width - 8; decoration += 48) {
@@ -196,7 +264,21 @@ function updateGame() {
   if (playerHealth <= 0) {
     gameState = 'lost';
   } else if (rivals.length === 0) {
-    gameState = 'won';
+    if (levelIndex === levels.length - 1) {
+      gameState = 'won';
+    } else {
+      gameState = 'level-transition';
+      levelTransitionTimer = 1400;
+    }
+  }
+}
+
+function updateLevelTransition() {
+  levelTransitionTimer = max(0, levelTransitionTimer - deltaTime);
+  if (levelTransitionTimer === 0) {
+    levelIndex++;
+    loadLevel();
+    gameState = 'playing';
   }
 }
 
