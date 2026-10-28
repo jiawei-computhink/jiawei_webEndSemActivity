@@ -333,7 +333,7 @@ function fireSpell(shooter, isPlayerShot) {
   const directionX = aimX / aimLength;
   const directionY = aimY / aimLength;
   const spreadAngles = isPlayerShot && spreadShotTimer > 0
-    ? [-0.28, 0, 0.28]
+    ? [-18, 0, 18]
     : [0];
 
   for (const spreadAngle of spreadAngles) {
@@ -559,12 +559,10 @@ function drawHud() {
   text('YOUR HEALTH', width / 2, 19);
   drawHealthBar(width / 2 - 115, 34, 230, playerHealth, playerMaxHealth, playerColor);
   textSize(12);
-  fill(isPlayerReloading ? '#ffd879' : '#c9f8ed');
-  text(isPlayerReloading ? 'RECHARGING SPELLS' : 'SPELLS: ' + playerShotsInBurst + '/' + shotsPerBurst, width / 2, 60);
-  if (spreadShotTimer > 0) {
-    fill('#ffcf70');
-    text('CONE SHOT ' + (spreadShotTimer / 1000).toFixed(1) + 's', width / 2, 73);
-  }
+  fill(isPlayerReloading ? '#ffd879' : spreadShotTimer > 0 ? '#ffcf70' : '#c9f8ed');
+  const shotStatus = isPlayerReloading ? 'RECHARGING SPELLS' : 'SPELLS: ' + playerShotsInBurst + '/' + shotsPerBurst;
+  const powerupStatus = spreadShotTimer > 0 ? 'CONE SHOT ' + (spreadShotTimer / 1000).toFixed(1) + 's  •  ' : '';
+  text(powerupStatus + shotStatus, width / 2, 60);
 
   textAlign(RIGHT, CENTER);
   fill('#d7defa');
